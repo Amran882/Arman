@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr.Bakery Wala</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: aliceblue;
+            box-shadow: 0cap;
+            background-attachment: fixed;
+        }
+        @media print {
+            .print-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><b> Welcome to Mr.Bakery Wala</b> </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" id="home-nav">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="invoices-nav">Invoices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="clients-nav">Clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="settings-nav">Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div id="home-page">
+            <marquee> <b><h1>Welcome to Billing Store </h1></b></marquee>
+            <hr>
+            <center><p></p></center>
+        </div>
+        <div id="invoices-page" style="display: none;">
+            <h1>Invoices</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-invoice-modal">Add New Invoice</button>
+            <table class="table table-striped" id="invoices-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Client Name </th>
+                        <th>Amount (INR)</th>
+                        <th>Tax Rate</th>
+                        <th>Total (INR)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="invoices-tbody">
+                </tbody>
+            </table>
+        </div>
+        <div id="clients-page" style="display: none;">
+            <h1>Clients</h1>
+            <ul id="clients-list">
+            </ul>
+        </div>
+        <div id="settings-page" style="display: none;">
+            <h1>Settings</h1>
+            <form>
+                <div class="mb-3">
+                    <label for="tax-rate" class="form-label">Tax Rate</label>
+                    <input type="number" class="form-control" id="tax-rate" value="0">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="add-invoice-modal" tabindex="-1" aria-labelledby="add-invoice-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add-invoice-modal-label">Add New Invoice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date">
+                        </div>
+                        <div class="mb-3">
+                            <label for="client" class="form-label">Client</label>
+                            <input type="text" class="form-control" id="client">
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Amount (INR)</label>
+                            <input type="number" class="form-control" id="amount">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tax-rate-modal" class="form-label">Tax Rate</label>
+                            <input type="number" class="form-control" id="tax-rate-modal" value="0">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="add-invoice-btn">Add Invoice</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="billing-receipt-modal" tabindex="-1" aria-labelledby="billing-receipt-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="billing-receipt-modal-label">Mr.Bakery Wala </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="billing-receipt-content">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary print-button" id="print-receipt-btn">Print Receipt</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let invoices = JSON.parse(localStorage.getItem('invoices')) || [];
+        let clients = JSON.parse(localStorage.getItem('clients')) || [];
+        const invoicesTable = document.getElementById('invoices-table');
+        const invoicesTbody = document.getElementById('invoices-tbody');
+        const addInvoiceBtn = document.getElementById('add-invoice-btn');
+        const addInvoiceModal = document.getElementById('add-invoice-modal');
+        const invoicesNav = document.getElementById('invoices-nav');
+        const clientsNav = document.getElementById('clients-nav');
+        const settingsNav = document.getElementById('settings-nav');
+        const homeNav = document.getElementById('home-nav');
+        const homePage = document.getElementById('home-page');
+        const invoicesPage = document.getElementById('invoices-page');
+        const clientsPage = document.getElementById('clients-page');
+        const settingsPage = document.getElementById('settings-page');
+        const printReceiptBtn = document.getElementById('print-receipt-btn');
+        const billingReceiptModal = document.getElementById('billing-receipt-modal');
+        const billingReceiptContent = document.getElementById('billing-receipt-content');
+        const clientsList = document.getElementById('clients-list');
+
+        invoicesNav.addEventListener('click', () => {
+            homePage.style.display = 'none';
+            clientsPage.style.display = 'none';
+            settingsPage.style.display = 'none';
+            invoicesPage.style.display = 'block';
+            updateInvoicesTable();
+        });
+
+        clientsNav.addEventListener('click', () => {
+            homePage.style.display = 'none';
+            invoicesPage.style.display = 'none';
+            settingsPage.style.display = 'none';
+            clientsPage.style.display = 'block';
+            updateClientsList();
+        });
+
+        settingsNav.addEventListener('click', () => {
+            homePage.style.display = 'none';
+            invoicesPage.style.display = 'none';
+            clientsPage.style.display = 'none';
+            settingsPage.style.display = 'block';
+        });
+
+        homeNav.addEventListener('click', () => {
+            invoicesPage.style.display = 'none';
+            clientsPage.style.display = 'none';
+            settingsPage.style.display = 'none';
+            homePage.style.display = 'block';
+        });
+
+        addInvoiceBtn.addEventListener('click', () => {
+            const date = document.getElementById('date').value;
+            const client = document.getElementById('client').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const taxRate = parseFloat(document.getElementById('tax-rate-modal').value);
+            const total = amount + (amount * taxRate / 100);
+            invoices.push({ date, client, amount, taxRate, total });
+            localStorage.setItem('invoices', JSON.stringify(invoices));
+            updateInvoicesTable();
+            addInvoiceModal.querySelector('.btn-close').click();
+        });
+
+        function updateInvoicesTable() {
+            invoicesTbody.innerHTML = '';
+            invoices.forEach((invoice, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${invoice.date}</td>
+                    <td>${invoice.client}</td>
+                    <td>₹${invoice.amount}</td>
+                    <td>${invoice.taxRate}%</td>
+                    <td>₹${invoice.total}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#billing-receipt-modal" data-index="${index}" id="view-receipt-btn-${index}">View Receipt</button>
+                        <button class="btn btn-sm btn-danger" data-index="${index}">Delete</button>
+                    </td>
+                `;
+                invoicesTbody.appendChild(row);
+
+                const viewReceiptBtn = document.getElementById(`view-receipt-btn-${index}`);
+                viewReceiptBtn.addEventListener('click', () => {
+                    const invoice = invoices[index];
+                    billingReceiptContent.innerHTML = `
+                        <h2>Billing Receipt</h2>
+                        <p>Date: ${invoice.date}</p>
+                        <p>Client: ${invoice.client}</p>
+                        <p>Amount: ₹${invoice.amount}</p>
+                        <p>Tax Rate: ${invoice.taxRate}%</p>
+                        <p>Total: ₹${invoice.total}</p>
+                    `;
+                    billingReceiptModal.querySelector('.btn-close').click();
+                    billingReceiptModal.style.display = 'block';
+                });
+            });
+        }
+
+        function updateClientsList() {
+            clientsList.innerHTML = '';
+            clients.forEach((client) => {
+                const li = document.createElement('li');
+                li.textContent = client;
+                clientsList.appendChild(li);
+            });
+        }
+
+        printReceiptBtn.addEventListener('click', () => {
+            window.print();
+        });
+
+        invoicesTable.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-danger')) {
+                const index = e.target.getAttribute('data-index');
+                invoices.splice(index, 1);
+                localStorage.setItem('invoices', JSON.stringify(invoices));
+                updateInvoicesTable();
+            }
+        });
+    </script>
+</body>
+</html>
