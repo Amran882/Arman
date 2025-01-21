@@ -3,254 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr.Bakery Wala</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <title>Billing Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: aliceblue;
-            box-shadow: 0cap;
-            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            background-color: rgb(198, 218, 218);
+        }
+        .hero {
+            background-image: linear-gradient(to bottom, #f7f7f7, #fff);
+            padding: 50px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+        #bill-list {
+            padding: 20px;
+            font-size: 16px;
+        }
+        #bill-list td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+        .print-modal-body {
+            font-size: 16px;
         }
         @media print {
-            .print-button {
-                display: none;
+            .print-modal-body {
+                font-size: 16px;
             }
+        }
+        .receipt-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 20px auto;
+        }
+        .receipt-header {
+            background-color: #f7f7f7;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .receipt-body {
+            padding: 20px;
+        }
+        .receipt-footer {
+            background-color: #f7f7f7;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"><b> Welcome to Mr.Bakery Wala</b> </a>
+            <a class="navbar-brand" href="#">Billing Application</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#" id="home-nav">Home</a>
+                        <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" id="invoices-nav">Invoices</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="clients-nav">Clients</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="settings-nav">Settings</a>
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#addBillModal">Add Bill</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="container mt-5">
-        <div id="home-page">
-            <marquee> <b><h1>Welcome to Billing Store </h1></b></marquee>
-            <hr>
-            <center><p></p></center>
-        </div>
-        <div id="invoices-page" style="display: none;">
-            <h1>Invoices</h1>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-invoice-modal">Add New Invoice</button>
-            <table class="table table-striped" id="invoices-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Client Name </th>
-                        <th>Amount (INR)</th>
-                        <th>Tax Rate</th>
-                        <th>Total (INR)</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="invoices-tbody">
-                </tbody>
-            </table>
-        </div>
-        <div id="clients-page" style="display: none;">
-            <h1>Clients</h1>
-            <ul id="clients-list">
-            </ul>
-        </div>
-        <div id="settings-page" style="display: none;">
-            <h1>Settings</h1>
-            <form>
-                <div class="mb-3">
-                    <label for="tax-rate" class="form-label">Tax Rate</label>
-                    <input type="number" class="form-control" id="tax-rate" value="0">
-                </div>
-            </form>
-        </div>
+    <div class="hero">
+        <h1>Mr. BAKERY WALA</h1>
+        <H4>&</H4>
+        <h2>Restaurant</h2>
+        <hr>
+        <p>Just in Front LIC Office, Bhatwaliya no 1, Tamkuhi Raj, Kushinagar</p>
     </div>
-    <div class="modal fade" id="add-invoice-modal" tabindex="-1" aria-labelledby="add-invoice-modal-label" aria-hidden="true">
+    <div id="bill-list">
+        <h2>Bill List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Bill ID</th>
+                    <th>Bill Date</th>
+                    <th>Due Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="bill-list-body">
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="addBillModal" tabindex="-1" aria-labelledby="addBillModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="add-invoice-modal-label">Add New Invoice</h5>
+                    <h5 class="modal-title" id="addBillModalLabel">Add Bill</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="add-bill-form">
                         <div class="mb-3">
-                            <label for="date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="date">
+                            <label for="bill-date" class="form-label">Bill Date</label>
+                            <input type="date" class="form-control" id="bill-date" required>
                         </div>
                         <div class="mb-3">
-                            <label for="client" class="form-label">Client</label>
-                            <input type="text" class="form-control" id="client">
+                            <label for="due-date" class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="due-date" required>
                         </div>
                         <div class="mb-3">
-                            <label for="amount" class="form-label">Amount (INR)</label>
-                            <input type="number" class="form-control" id="amount">
+                            <label for="amount" class="form-label">Amount</label>
+                            <input type="number" class="form-control" id="amount" required>
                         </div>
                         <div class="mb-3">
-                            <label for="tax-rate-modal" class="form-label">Tax Rate</label>
-                            <input type="number" class="form-control" id="tax-rate-modal" value="0">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" required>
+                                <option value="">Select Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="paid">Paid</option>
+                                <option value="overdue">Overdue</option>
+                            </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="item-name" class="form-label">Item Name</label>
+                            <input type="text" class="form-control" id="item-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="quantity" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Bill</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="add-invoice-btn">Add Invoice</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="billing-receipt-modal" tabindex="-1" aria-labelledby="billing-receipt-modal-label" aria-hidden="true">
+    <div class="modal fade" id="billDetailsModal" tabindex="-1" aria-labelledby="billDetailsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="billing-receipt-modal-label">Mr.Bakery Wala </h5>
+                    <h5 class="modal-title" id="billDetailsModalLabel">Bill Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="billing-receipt-content">
+                <div class="modal-body print-modal-body" id="bill-details-body">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary print-button" id="print-receipt-btn">Print Receipt</button>
+                    <button type="button" class="btn btn-primary" id="print-bill-button">Print Bill</button>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="footer">
+        &copy; 2024 Billing Application
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script>
-        let invoices = JSON.parse(localStorage.getItem('invoices')) || [];
-        let clients = JSON.parse(localStorage.getItem('clients')) || [];
-        const invoicesTable = document.getElementById('invoices-table');
-        const invoicesTbody = document.getElementById('invoices-tbody');
-        const addInvoiceBtn = document.getElementById('add-invoice-btn');
-        const addInvoiceModal = document.getElementById('add-invoice-modal');
-        const invoicesNav = document.getElementById('invoices-nav');
-        const clientsNav = document.getElementById('clients-nav');
-        const settingsNav = document.getElementById('settings-nav');
-        const homeNav = document.getElementById('home-nav');
-        const homePage = document.getElementById('home-page');
-        const invoicesPage = document.getElementById('invoices-page');
-        const clientsPage = document.getElementById('clients-page');
-        const settingsPage = document.getElementById('settings-page');
-        const printReceiptBtn = document.getElementById('print-receipt-btn');
-        const billingReceiptModal = document.getElementById('billing-receipt-modal');
-        const billingReceiptContent = document.getElementById('billing-receipt-content');
-        const clientsList = document.getElementById('clients-list');
+        let bills = [];
 
-        invoicesNav.addEventListener('click', () => {
-            homePage.style.display = 'none';
-            clientsPage.style.display = 'none';
-            settingsPage.style.display = 'none';
-            invoicesPage.style.display = 'block';
-            updateInvoicesTable();
-        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const addBillForm = document.getElementById("add-bill-form");
+            addBillForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const billDate = document.getElementById("bill-date").value;
+                const dueDate = document.getElementById("due-date").value;
+                const amount = document.getElementById("amount").value;
+                const status = document.getElementById("status").value;
+                const itemName = document.getElementById("item-name").value;
+                const quantity = document.getElementById("quantity").value;
+                const bill = {
+                    id: bills.length + 1,
+                    billDate: billDate,
+                    dueDate: dueDate,
+                    amount: amount,
+                    status: status,
+                    items: [
+                        {
+                            name: itemName,
+                            quantity: quantity
+                        }
+                    ]
+                };
+                bills.push(bill);
+                updateBillList();
+                addBillForm.reset();
+            });
 
-        clientsNav.addEventListener('click', () => {
-            homePage.style.display = 'none';
-            invoicesPage.style.display = 'none';
-            settingsPage.style.display = 'none';
-            clientsPage.style.display = 'block';
-            updateClientsList();
-        });
-
-        settingsNav.addEventListener('click', () => {
-            homePage.style.display = 'none';
-            invoicesPage.style.display = 'none';
-            clientsPage.style.display = 'none';
-            settingsPage.style.display = 'block';
-        });
-
-        homeNav.addEventListener('click', () => {
-            invoicesPage.style.display = 'none';
-            clientsPage.style.display = 'none';
-            settingsPage.style.display = 'none';
-            homePage.style.display = 'block';
-        });
-
-        addInvoiceBtn.addEventListener('click', () => {
-            const date = document.getElementById('date').value;
-            const client = document.getElementById('client').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const taxRate = parseFloat(document.getElementById('tax-rate-modal').value);
-            const total = amount + (amount * taxRate / 100);
-            invoices.push({ date, client, amount, taxRate, total });
-            localStorage.setItem('invoices', JSON.stringify(invoices));
-            updateInvoicesTable();
-            addInvoiceModal.querySelector('.btn-close').click();
-        });
-
-        function updateInvoicesTable() {
-            invoicesTbody.innerHTML = '';
-            invoices.forEach((invoice, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${invoice.date}</td>
-                    <td>${invoice.client}</td>
-                    <td>₹${invoice.amount}</td>
-                    <td>${invoice.taxRate}%</td>
-                    <td>₹${invoice.total}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#billing-receipt-modal" data-index="${index}" id="view-receipt-btn-${index}">View Receipt</button>
-                        <button class="btn btn-sm btn-danger" data-index="${index}">Delete</button>
-                    </td>
-                `;
-                invoicesTbody.appendChild(row);
-
-                const viewReceiptBtn = document.getElementById(`view-receipt-btn-${index}`);
-                viewReceiptBtn.addEventListener('click', () => {
-                    const invoice = invoices[index];
-                    billingReceiptContent.innerHTML = `
-                        <h2>Billing Receipt</h2>
-                        <p>Date: ${invoice.date}</p>
-                        <p>Client: ${invoice.client}</p>
-                        <p>Amount: ₹${invoice.amount}</p>
-                        <p>Tax Rate: ${invoice.taxRate}%</p>
-                        <p>Total: ₹${invoice.total}</p>
-                    `;
-                    billingReceiptModal.querySelector('.btn-close').click();
-                    billingReceiptModal.style.display = 'block';
+            function updateBillList() {
+                const billListBody = document.getElementById("bill-list-body");
+                billListBody.innerHTML = "";
+                bills.forEach(function(bill) {
+                    const row = document.createElement("tr");
+                    const billIdCell = document.createElement("td");
+                    billIdCell.textContent = bill.id;
+                    row.appendChild(billIdCell);
+                    const billDateCell = document.createElement("td");
+                    billDateCell.textContent = bill.billDate;
+                    row.appendChild(billDateCell);
+                    const dueDateCell = document.createElement("td");
+                    dueDateCell.textContent = bill.dueDate;
+                    row.appendChild(dueDateCell);
+                    const amountCell = document.createElement("td");
+                    amountCell.textContent = bill.amount;
+                    row.appendChild(amountCell);
+                    const statusCell = document.createElement("td");
+                    statusCell.textContent = bill.status;
+                    row.appendChild(statusCell);
+                    const actionsCell = document.createElement("td");
+                    const viewButton = document.createElement("button");
+                    viewButton.textContent = "View";
+                    viewButton.className = "btn btn-primary";
+                    viewButton.addEventListener("click", function() {
+                        const billDetailsModal = document.getElementById("billDetailsModal");
+                        const billDetailsBody = document.getElementById("bill-details-body");
+                        billDetailsBody.innerHTML = `
+                            <div class="receipt-header">
+                                <h2>Receipt</h2>
+                                <img src="C:\Users\Satya Computer\OneDrive\Desktop\j.jpg" class="receipt-logo" alt="Logo">
+                            </div>
+                            <div class="receipt-body">
+                                <h3>Mr. Bakery Wala</h3>
+                                <p>Bill ID: ${bill.id}</p>
+                                <p>Bill Date: ${bill.billDate}</p>
+                                <p>Due Date: ${bill.dueDate}</p>
+                                <p>Amount: ${bill.amount}</p>
+                                <p>Status: ${bill.status}</p>
+                                <h3>Items</h3>
+                                <ul>
+                                ${bill.items.map(item => `<li>${item.name} x${item.quantity}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="receipt-footer">
+                                <p>Thank you for your payment</p>
+                            </div>
+                        `;
+                        const modal = new bootstrap.Modal(billDetailsModal);
+                        modal.show();
+                    });
+                    actionsCell.appendChild(viewButton);
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Delete";
+                    deleteButton.className = "btn btn-danger";
+                    deleteButton.addEventListener("click", function() {
+                        const index = bills.indexOf(bill);
+                        if (index > -1) {
+                            bills.splice(index, 1);
+                            updateBillList();
+                        }
+                    });
+                    actionsCell.appendChild(deleteButton);
+                    row.appendChild(actionsCell);
+                    billListBody.appendChild(row);
                 });
-            });
-        }
-
-        function updateClientsList() {
-            clientsList.innerHTML = '';
-            clients.forEach((client) => {
-                const li = document.createElement('li');
-                li.textContent = client;
-                clientsList.appendChild(li);
-            });
-        }
-
-        printReceiptBtn.addEventListener('click', () => {
-            window.print();
-        });
-
-        invoicesTable.addEventListener('click', (e) => {
-            if (e.target.classList.contains('btn-danger')) {
-                const index = e.target.getAttribute('data-index');
-                invoices.splice(index, 1);
-                localStorage.setItem('invoices', JSON.stringify(invoices));
-                updateInvoicesTable();
             }
+
+            const printBillButton = document.getElementById("print-bill-button");
+            printBillButton.addEventListener("click", function() {
+                const billDetailsBody = document.getElementById("bill-details-body");
+                const printWindow = window.open('', '', 'height=500,width=700');
+                printWindow.document.write('<html><head><title>Bill Details</title></head><body>');
+                printWindow.document.write(billDetailsBody.innerHTML);
+                printWindow.document.write('</body></html>');
+                printWindow.print();
+                printWindow.close();
+            });
         });
     </script>
 </body>
